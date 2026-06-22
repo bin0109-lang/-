@@ -1,0 +1,21 @@
+name: Build Tweak
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu‑latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Theos
+        run: |
+          git clone https://github.com/theos/theos.git /opt/theos
+          export THEOS=/opt/theos
+          sudo apt‑get install clang make ldid
+      - name: Make Package
+        run: |
+          export THEOS=/opt/theos
+          make package
+      - name: Upload dylib
+        uses: actions/upload‑artifact@v4
+        with:
+          name: SignPatch
+          path: ./obj/arm64/SignPatch.dylib
